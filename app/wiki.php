@@ -5,11 +5,16 @@
 <?php
 if (isset($_GET['q'])) {
     $q = $_GET['q'];
-    $sql = "SELECT * FROM articles WHERE title LIKE '%$q%'";
-    echo "<p>Query: $sql</p>";
-    $res = $GLOBALS['PDO']->query($sql);
-    foreach ($res as $row) {
-        echo "<li>{$row['title']}: {$row['body']}</li>";
+    
+    // Gunakan prepared statement untuk mencegah SQL injection
+    $sql = "SELECT * FROM articles WHERE title LIKE ?";
+    echo "<p>Searching for: " . htmlspecialchars($q) . "</p>";
+    
+    $stmt = $GLOBALS['PDO']->prepare($sql);
+    $stmt->execute(['%' . $q . '%']);
+    
+    foreach ($stmt as $row) {
+        echo "<li>" . htmlspecialchars($row['title']) . ": " . htmlspecialchars($row['body']) . "</li>";
     }
 }
 ?>

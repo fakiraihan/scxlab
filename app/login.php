@@ -19,9 +19,12 @@ if ($_POST) {
     $u = $_POST['username'];
     $p = $_POST['password'];
 
-    $sql = "SELECT * FROM users WHERE username='$u' AND password='$p'";
-    $res = $GLOBALS['PDO']->query($sql);
-    if ($row = $res->fetch()) {
+    // Gunakan prepared statement untuk mencegah SQL injection
+    $sql = "SELECT * FROM users WHERE username=? AND password=?";
+    $stmt = $GLOBALS['PDO']->prepare($sql);
+    $stmt->execute([$u, $p]);
+    
+    if ($row = $stmt->fetch()) {
         $_SESSION['user'] = $row['username'];
         $_SESSION['role'] = $row['role'];
 

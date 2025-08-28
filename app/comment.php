@@ -16,7 +16,7 @@ if ($_POST) {
 <h3>Comment lists : </h3>
 <?php
 foreach ($GLOBALS['PDO']->query("SELECT * FROM comments ORDER BY id DESC") as $row) {
-    echo "<p><b>{$row['author']}</b>: {$row['content']}</p>";
+    echo "<p><b>" . htmlspecialchars($row['author']) . "</b>: " . htmlspecialchars($row['content']) . "</p>";
 }
 ?>
 <?php include '_footer.php'; ?>
